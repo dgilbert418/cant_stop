@@ -16,17 +16,17 @@ class Gamestate:
         self.completed_lanes = self.find_completed_lanes()
 
     @classmethod
-    def new_board(class_object, num_players, start_player):
+    def new_board(cls, num_players, start_player):
         player_progress = []
         for i in range(num_players):
             p = {}
-            for j in self.LANE_LENGTHS:
+            for j in __class__.LANE_LENGTHS:
                 p[j] = 0
             player_progress.append(p)
         turn_progress = {}
         cur_player = start_player
-        dice = [0 for i in range(self.NUM_DICE)]
-        board = class_object(player_progress, turn_progress, cur_player, dice)
+        dice = [0 for i in range(__class__.NUM_DICE)]
+        board = cls(player_progress, turn_progress, cur_player, dice)
         board.roll_dice()
         return board
 
