@@ -27,6 +27,7 @@ class GameManager:
         if not self.gamestate.game_over():
             self.query_player()
 
+
 class IllegalMoveError(Exception):
     def __init__(self, message):
         print(message)

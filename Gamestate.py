@@ -1,6 +1,5 @@
 import random
-import numpy as np
-from itertools import combinations
+
 
 class Gamestate:
 
@@ -115,7 +114,6 @@ class Gamestate:
             lane_1 = temp.pop(i) + temp.pop(0)
             lane_2 = sum(temp)
             combos.append(sorted[lane_1,lane_2])
-
         return combos
 
     def game_over(self):
