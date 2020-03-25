@@ -78,10 +78,6 @@ class Gamestate:
         else:
             return True
 
-    @staticmethod
-    def is_die_face(num):
-        return num.is_integer() and 1 <= num <= 6
-
     def lock_in(self):
         for i in self.turn_progress:
             self.player_progress[self.cur_player][i] += self.turn_progress[i]
@@ -108,6 +104,8 @@ class Gamestate:
                         complete.append(i)
         return complete
 
+    def is_legal(move):
+        return (move in self.all_moves(dice)) and any([is_lane_advanceable(lane) for lane in move])
 
 class CannotAdvanceError(Exception):
     def __init__(self, message):
