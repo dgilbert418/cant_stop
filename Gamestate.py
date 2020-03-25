@@ -108,6 +108,7 @@ class Gamestate:
     def is_legal(move):
         return (move in self.all_moves(dice)) and any([is_lane_advanceable(lane) for lane in move])
 
+
 class CannotAdvanceError(Exception):
     def __init__(self, message):
         print(message)
