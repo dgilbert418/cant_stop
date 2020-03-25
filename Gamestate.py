@@ -31,8 +31,7 @@ class Gamestate:
         return board
 
     def roll_dice(self):
-        for i in range(self.NUM_DICE):
-            self.dice[i] = random.randrange(1, 7)
+        self.dice = [random.randrange(1, 7) for iter in range(self.NUM_DICE)]
 
     def advance_lane(self, lane):
         if lane in self.completed_lanes:
