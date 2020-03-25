@@ -5,7 +5,7 @@ class Gamestate:
 
     NUM_DICE = 4
     NUM_LANES = 11
-    LANE_LENGTHS = {2: 3, 3: 4, 4: 7, 5: 9, 6: 11, 7: 13, 8: 11, 9: 9, 10: 7, 11: 5, 12: 3}
+    LANE_LENGTHS = {2: 3, 3: 5, 4: 7, 5: 9, 6: 11, 7: 13, 8: 11, 9: 9, 10: 7, 11: 5, 12: 3}
     NUM_TEMP_CONES = 3
 
     def __init__(self, player_progress, turn_progress, cur_player, dice):
@@ -61,20 +61,13 @@ class Gamestate:
         possible_lanes = list(set(all_combinations))
         return any([self.is_lane_advanceable(i) for i in possible_lanes])
 
-    def advance(self, combo):
-        combo_dice = sorted([j for i in combo for j in i])
-        game_dice = sorted(self.dice)
-        if combo_dice != game_dice:
-            raise InvalidCombinationError("Dice in combination do not match current game dice.")
-        if not all([self.is_die_face(i) for i in combo_dice]):
-            raise InvalidCombinationError("Combination contains a die which is not a valid die face.")
-        lanes = [sum(i) for i in combo]
+    def advance(self, lanes):
         if not any([self.is_lane_advanceable(i) for i in lanes]):
             raise InvalidCombinationError("Cannot advance on either lane.")
         else:
             for i in lanes:
                 if self.is_lane_advanceable(i):
-                    self.advance_lane(i)
+                    self.advance_lanes(i)
 
     def is_lane_advanceable(self, lane):
         if lane in self.completed_lanes:
