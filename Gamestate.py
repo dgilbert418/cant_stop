@@ -1,5 +1,6 @@
 import random
-
+import numpy as np
+from itertools import combinations
 
 class Gamestate:
 
@@ -104,8 +105,21 @@ class Gamestate:
                         complete.append(i)
         return complete
 
-    def is_legal(move):
-        return (move in self.all_moves(dice)) and any([is_lane_advanceable(lane) for lane in move])
+    def is_legal(self, move):
+        return (sorted(move) in self.all_combos()) and any([self.is_lane_advanceable(lane) for lane in move])
+
+    def all_combos(self):
+        combos = []
+        for i in range(1,self.NUM_DICE):
+            temp = self.dice.copy()
+            lane_1 = temp.pop(i) + temp.pop(0)
+            lane_2 = sum(temp)
+            combos.append(sorted[lane_1,lane_2])
+
+        return combos
+
+    def game_over(self):
+        #todo
 
 
 class CannotAdvanceError(Exception):

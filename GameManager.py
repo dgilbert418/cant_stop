@@ -15,12 +15,17 @@ class GameManager:
         player_progress = deepcopy(self.gamestate.player_progress)
         turn_progress = deepcopy(self.gamestate.turn_progress)
 
-        move = self.players[self.gamestate.cur_player].make_move(dice, player_progress, turn_progress)
+        move, lock_in = self.players[self.gamestate.cur_player].make_move(dice, player_progress, turn_progress)
+
         if self.gamestate.is_legal(move):
-            self.gamestate.advance(move.lanes)
+            self.gamestate.advance(move)
         else:
             raise IllegalMoveError('Illegal move.')
 
+        if lock_in:
+            self.gamestate.lock_in()
+        if not self.gamestate.game_over():
+            self.query_player()
 
 class IllegalMoveError(Exception):
     def __init__(self, message):
