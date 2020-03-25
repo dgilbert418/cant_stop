@@ -76,7 +76,7 @@ class Gamestate:
                 if self.is_lane_advanceable(i):
                     self.advance_lane(i)
 
-    def is_lane_advanceable(self,lane):
+    def is_lane_advanceable(self, lane):
         if lane in self.completed_lanes:
             return False
         elif self.player_progress[self.cur_player][lane] + self.turn_progress[lane] >= self.LANE_LENGTHS[lane]:
