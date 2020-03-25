@@ -13,5 +13,14 @@ class GameManager:
     def query_player(self):
         dice = self.gamestate.dice.copy()
         player_progress = deepcopy(self.gamestate.player_progress)
+        turn_progress = deepcopy(self.gamestate.turn_progress)
 
+        move = self.players[self.gamestate.cur_player].make_move(dice, player_progress, turn_progress)
+        if self.gamestate.is_legal(move):
+            self.gamestate.advance(move.lanes)
+        else:
+            raise IllegalMoveError('Illegal move.')
 
+class IllegalMoveError(Exception):
+    def __init__(self, message):
+        print(message)
