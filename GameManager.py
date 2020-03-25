@@ -1,8 +1,8 @@
 import random
 from copy import deepcopy
 
-class GameManager:
 
+class GameManager:
     def __init__(self, players):
         num_players = len(players)
         start_player = random.randrange(0, num_players)
@@ -20,6 +20,7 @@ class GameManager:
             self.gamestate.advance(move.lanes)
         else:
             raise IllegalMoveError('Illegal move.')
+
 
 class IllegalMoveError(Exception):
     def __init__(self, message):

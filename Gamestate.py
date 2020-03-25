@@ -1,4 +1,5 @@
 import random
+from itertools import combinations
 
 
 class Gamestate:
@@ -20,18 +21,18 @@ class Gamestate:
         player_progress = []
         for i in range(num_players):
             p = {}
-            for j in __class__.LANE_LENGTHS:
+            for j in cls.LANE_LENGTHS:
                 p[j] = 0
             player_progress.append(p)
         turn_progress = {}
         cur_player = start_player
-        dice = [0 for i in range(__class__.NUM_DICE)]
+        dice = [0 for i in range(cls.NUM_DICE)]
         board = cls(player_progress, turn_progress, cur_player, dice)
         board.roll_dice()
         return board
 
     def roll_dice(self):
-        self.dice = [random.randrange(1, 7) for iter in range(self.NUM_DICE)]
+        self.dice = [random.randrange(1, 7) for _ in range(self.NUM_DICE)]
 
     def advance_lane(self, lane):
         if lane in self.completed_lanes:
@@ -96,7 +97,7 @@ class Gamestate:
         complete = []
         for i in self.LANE_LENGTHS:
             for j in range(len(self.player_progress)):
-                if (j == self.cur_player) and (i in self.turn_progress):
+                if j == self.cur_player and i in self.turn_progress:
                     if self.player_progress[j][i] + self.turn_progress[i] == self.LANE_LENGTHS[i]:
                         complete.append(i)
                 else:
