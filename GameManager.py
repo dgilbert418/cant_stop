@@ -19,15 +19,15 @@ class GameManager:
         return move, lock_in
 
     def execute_game(self):
-        while not self.gamestate.game_over():
-            cur_player = self.gamestate.cur_player
-            move, lock_in = self.query_player(cur_player)
+        while not self.gamestate.winning_player():
+            move, lock_in = self.query_player()
             if self.gamestate.is_legal(move):
                 self.gamestate.advance(move)
             else:
                 raise IllegalMoveError('Illegal move.')
             if lock_in:
                 self.gamestate.lock_in()
+        print("Player " + str(self.gamestate.winning_player()) + "wins the game!")
 
 
 class IllegalMoveError(Exception):

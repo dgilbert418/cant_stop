@@ -87,7 +87,10 @@ class Gamestate:
         self.next_player()
 
     def next_player(self):
-        self.cur_player = (self.cur_player + 1) % (len(self.player_progress) - 1)
+        if self.cur_player == len(self.player_progress) - 1:
+            self.cur_player = 0
+        else:
+            self.cur_player += 1
 
     def find_completed_lanes(self):
         complete = []
@@ -113,11 +116,11 @@ class Gamestate:
             combos.append(sorted[lane_1, lane_2])
         return combos
 
-    def game_over(self):
-        for progress in self.player_progress:
+    def winning_player(self):
+        for player_id, progress in enumerate(self.player_progress):
             if sum(progress[i] == self.LANE_LENGTHS[i] for i in range(len(Gamestate.LANE_LENGTHS))) >= 3:
-                return True
-        return False
+                return player_id
+        return None
 
 
 class CannotAdvanceError(Exception):
