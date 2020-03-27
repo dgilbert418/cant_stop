@@ -109,15 +109,18 @@ class Gamestate:
 
     def all_combos(self):
         combos = []
-        for i in range(1,self.NUM_DICE):
+        for i in range(1, self.NUM_DICE):
             temp = self.dice.copy()
             lane_1 = temp.pop(i) + temp.pop(0)
             lane_2 = sum(temp)
-            combos.append(sorted[lane_1,lane_2])
+            combos.append(sorted[lane_1, lane_2])
         return combos
 
     def game_over(self):
-        #todo
+        for index, progress in enumerate(self.player_progress):
+            if sum(progress[i] == self.LANE_LENGTHS[i] for i in range(len(Gamestate.LANE_LENGTHS))) >= 3:
+                return True
+        return False
 
 
 class CannotAdvanceError(Exception):
