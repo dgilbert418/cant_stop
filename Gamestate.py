@@ -87,10 +87,7 @@ class Gamestate:
         self.next_player()
 
     def next_player(self):
-        if self.cur_player == len(self.player_progress) - 1:
-            self.cur_player = 0
-        else:
-            self.cur_player += 1
+        self.cur_player = (self.cur_player + 1) % (len(self.player_progress) - 1)
 
     def find_completed_lanes(self):
         complete = []
@@ -117,7 +114,7 @@ class Gamestate:
         return combos
 
     def game_over(self):
-        for index, progress in enumerate(self.player_progress):
+        for progress in self.player_progress:
             if sum(progress[i] == self.LANE_LENGTHS[i] for i in range(len(Gamestate.LANE_LENGTHS))) >= 3:
                 return True
         return False
