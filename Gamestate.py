@@ -105,7 +105,7 @@ class Gamestate:
         return complete
 
     def is_legal(self, move):
-        return (sorted(move) in self.all_combos()) and any([self.is_lane_advanceable(lane) for lane in move])
+        return move in self.all_combos() and any([self.is_lane_advanceable(lane) for lane in move])
 
     def all_combos(self):
         combos = []
@@ -113,7 +113,9 @@ class Gamestate:
             temp = self.dice.copy()
             lane_1 = temp.pop(i) + temp.pop(0)
             lane_2 = sum(temp)
-            combos.append(sorted[lane_1, lane_2])
+            valid_lanes = filter(self.is_lane_advanceable, [lane_1, lane_2])
+            if valid_lanes:
+                combos.append(sorted(valid_lanes))
         return combos
 
     def winning_player(self):

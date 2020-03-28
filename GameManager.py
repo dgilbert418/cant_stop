@@ -19,7 +19,8 @@ class GameManager:
         return move, lock_in
 
     def execute_game(self):
-        while not self.gamestate.winning_player():
+        while not self.gamestate.winning_player()
+            self.gamestate.roll_dice()
             move, lock_in = self.query_player()
             if self.gamestate.is_legal(move):
                 self.gamestate.advance(move)
