@@ -1,6 +1,8 @@
 from Gamestate import Gamestate
+from Jeremy_Bot import Jeremy_Bot
+from GameManager import GameManager
 
-my_state = Gamestate.new_board(3, 0)
-my_state.roll_dice()
-print(my_state.dice)
-print(my_state.all_combos())
+bad_players = [Jeremy_Bot(), Jeremy_Bot(), Jeremy_Bot(), Jeremy_Bot()]
+my_game = GameManager(bad_players)
+
+my_game.execute_game()

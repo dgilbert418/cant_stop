@@ -54,11 +54,7 @@ class Gamestate:
                 self.turn_progress[lane] = 1
 
     def is_progress_possible(self):
-        all_combinations = [self.dice[i] + self.dice[j]
-                            for j in range(i+1, len(self.dice))
-                            for i in range(len(self.dice) - 1)]
-        possible_lanes = list(set(all_combinations))
-        return any([self.is_lane_advanceable(i) for i in possible_lanes])
+        return len(self.all_combos()) > 0
 
     def advance(self, lanes):
         if not any([self.is_lane_advanceable(i) for i in lanes]):
@@ -66,14 +62,16 @@ class Gamestate:
         else:
             for i in lanes:
                 if self.is_lane_advanceable(i):
-                    self.advance_lanes(i)
+                    self.advance_lane(i)
 
     def is_lane_advanceable(self, lane):
         if lane in self.completed_lanes:
             return False
-        elif self.player_progress[self.cur_player][lane] + self.turn_progress[lane] >= self.LANE_LENGTHS[lane]:
-            return False
         elif lane not in self.turn_progress and len(self.turn_progress) >= 3:
+            return False
+        elif lane not in self.turn_progress:
+            return True
+        elif self.player_progress[self.cur_player][lane] + self.turn_progress[lane] >= self.LANE_LENGTHS[lane]:
             return False
         else:
             return True
@@ -82,15 +80,13 @@ class Gamestate:
         for i in self.turn_progress:
             self.player_progress[self.cur_player][i] += self.turn_progress[i]
         self.completed_lanes = self.find_completed_lanes()
-        self.turn_progress = {}
-        self.roll_dice()
-        self.next_player()
 
     def next_player(self):
         if self.cur_player == len(self.player_progress) - 1:
             self.cur_player = 0
         else:
             self.cur_player += 1
+        self.turn_progress = {}
 
     def find_completed_lanes(self):
         complete = []
@@ -105,7 +101,7 @@ class Gamestate:
         return complete
 
     def is_legal(self, move):
-        return move in self.all_combos() and any([self.is_lane_advanceable(lane) for lane in move])
+        return sorted(move) in self.all_combos()
 
     def all_combos(self):
         combos = []
@@ -120,7 +116,7 @@ class Gamestate:
 
     def winning_player(self):
         for player_id, progress in enumerate(self.player_progress):
-            if sum(progress[i] == self.LANE_LENGTHS[i] for i in range(len(Gamestate.LANE_LENGTHS))) >= 3:
+            if sum(progress[i] == self.LANE_LENGTHS[i] for i in self.LANE_LENGTHS) >= 3:
                 return player_id
         return None
 
