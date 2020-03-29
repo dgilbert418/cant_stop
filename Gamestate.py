@@ -1,5 +1,6 @@
 import random
-
+import numpy
+import pandas as pd
 
 class Gamestate:
 
@@ -8,12 +9,13 @@ class Gamestate:
     LANE_LENGTHS = {2: 3, 3: 5, 4: 7, 5: 9, 6: 11, 7: 13, 8: 11, 9: 9, 10: 7, 11: 5, 12: 3}
     NUM_TEMP_CONES = 3
 
-    def __init__(self, player_progress, turn_progress, cur_player, dice):
+    def __init__(self, player_progress, turn_progress, cur_player, dice, turn_number):
         self.player_progress = player_progress  # List length NUM_PLAYERS of dicts length NUM_LANES
         self.turn_progress = turn_progress  # Dictionary of up length NUM_TEMP_CONES
         self.cur_player = cur_player
         self.dice = dice
         self.completed_lanes = self.find_completed_lanes()
+        self.turn_number = turn_number
 
     @classmethod
     def new_board(cls, num_players, start_player):
@@ -26,7 +28,8 @@ class Gamestate:
         turn_progress = {}
         cur_player = start_player
         dice = [0 for i in range(cls.NUM_DICE)]
-        board = cls(player_progress, turn_progress, cur_player, dice)
+        turn_number = 0
+        board = cls(player_progress, turn_progress, cur_player, dice, turn_number)
         board.roll_dice()
         return board
 
@@ -84,6 +87,7 @@ class Gamestate:
     def next_player(self):
         if self.cur_player == len(self.player_progress) - 1:
             self.cur_player = 0
+            self.turn_number += 1
         else:
             self.cur_player += 1
         self.turn_progress = {}
@@ -119,6 +123,49 @@ class Gamestate:
             if sum(progress[i] == self.LANE_LENGTHS[i] for i in self.LANE_LENGTHS) >= 3:
                 return player_id
         return None
+
+    def print_state(self, colors=('91', '92', '93', '94')):
+        textboard = pd.read_csv('textboard.csv', header=None).to_numpy()
+        for player_id, progress in enumerate(self.player_progress):
+            for lane in progress:
+                if progress[lane] > 0:
+                    idx = 3*(lane-2)
+                    if player_id in [0, 1]:
+                        idx += 1
+                    else:
+                        idx += 2
+                    jdx = 3*progress[lane]
+                    if player_id in [0,2]:
+                        jdx += 0
+                    else:
+                        jdx += 1
+                    textboard[idx, jdx] = "P" + str(player_id)
+        for lane in self.turn_progress:
+            idx = 3 * (lane - 2)
+            if self.cur_player in [0, 1]:
+                idx += 1
+            else:
+                idx += 2
+            if lane in self.player_progress[self.cur_player]:
+                jdx = 3 * self.turn_progress[lane] + self.player_progress[self.cur_player][lane]
+            else:
+                jdx = 3 * self.turn_progress[lane]
+            if self.cur_player in [0, 2]:
+                jdx += 0
+            else:
+                jdx += 1
+            textboard[idx, jdx] = "T"
+        n, m = textboard.shape
+        for i in range(n):
+            for j in range(m):
+                if textboard[i, j][0] == 'P':
+                    print("\033[{}mX\033[00m".format(colors[int(textboard[i, j][1])]), end="")
+                elif textboard[i, j] == 'T':
+                    print("\033[{}mT\033[00m".format(colors[self.cur_player]), end="")
+                else:
+                    print(u"\u001b[38m{}".format(textboard[i, j]), end="")
+            print("")
+        print("")
 
 
 class CannotAdvanceError(Exception):
