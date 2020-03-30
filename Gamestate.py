@@ -126,6 +126,8 @@ class Gamestate:
 
     def print_state(self, colors=('91', '92', '93', '94')):
         textboard = pd.read_csv('textboard.csv', header=None).to_numpy()
+        print("Dice: " + str(self.dice))
+        print("Current Player: \033[{}mPlayer {}\033[00m".format(colors[self.cur_player],self.cur_player))
         for player_id, progress in enumerate(self.player_progress):
             for lane in progress:
                 if progress[lane] > 0:

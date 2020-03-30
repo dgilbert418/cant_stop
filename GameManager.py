@@ -18,7 +18,7 @@ class GameManager:
         move, lock_in = self.players[self.gamestate.cur_player].make_move(combos, player_progress, turn_progress)
         return move, lock_in
 
-    def execute_game(self):
+    def execute_game(self, pause=False):
         while not self.gamestate.winning_player():
             self.gamestate.roll_dice()
             if self.gamestate.is_progress_possible():
@@ -33,6 +33,9 @@ class GameManager:
             if lock_in:
                 self.gamestate.lock_in()
                 self.gamestate.next_player()
+            self.gamestate.print_state()
+            if pause:
+                _ = input("Press any key to proceed to the next turn.")
         print("Player " + str(self.gamestate.winning_player()) + "wins the game!")
 
 
