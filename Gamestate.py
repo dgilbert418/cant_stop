@@ -56,9 +56,6 @@ class Gamestate:
             else:
                 self.turn_progress[lane] = 1
 
-    def is_progress_possible(self):
-        return len(self.all_combos()) > 0
-
     def advance(self, lanes):
         if not any([self.is_lane_advanceable(i) for i in lanes]):
             raise InvalidCombinationError("Cannot advance on either lane.")
@@ -104,16 +101,13 @@ class Gamestate:
                         complete.append(i)
         return complete
 
-    def is_legal(self, move):
-        return sorted(move) in self.all_combos()
-
     def all_combos(self):
         combos = []
         for i in range(1, self.NUM_DICE):
             temp = self.dice.copy()
             lane_1 = temp.pop(i) + temp.pop(0)
             lane_2 = sum(temp)
-            valid_lanes = filter(self.is_lane_advanceable, [lane_1, lane_2])
+            valid_lanes = list(filter(self.is_lane_advanceable, [lane_1, lane_2]))
             if valid_lanes:
                 combos.append(sorted(valid_lanes))
         return combos

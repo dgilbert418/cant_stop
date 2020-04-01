@@ -16,26 +16,30 @@ class GameManager:
         turn_progress = deepcopy(self.gamestate.turn_progress)
 
         move, lock_in = self.players[self.gamestate.cur_player].make_move(combos, player_progress, turn_progress)
+        print(move)
         return move, lock_in
 
     def execute_game(self, pause=False):
         while not self.gamestate.winning_player():
             self.gamestate.roll_dice()
-            if self.gamestate.is_progress_possible():
+            if len(self.gamestate.all_combos()) > 0:
                 move, lock_in = self.query_player()
+
+                print("Move: " + str(move))
+                print("All_combos: " + str(self.gamestate.all_combos()))
+                if sorted(move) in self.gamestate.all_combos():
+                    self.gamestate.advance(move)
+                else:
+                    raise IllegalMoveError('Illegal move.')
+                if lock_in:
+                    self.gamestate.lock_in()
+                    self.gamestate.next_player()
+                self.gamestate.print_state()
+                if pause:
+                    input("Press any key to proceed to the next turn.")
             else:
                 self.gamestate.next_player()
 
-            if self.gamestate.is_legal(move):
-                self.gamestate.advance(move)
-            else:
-                raise IllegalMoveError('Illegal move.')
-            if lock_in:
-                self.gamestate.lock_in()
-                self.gamestate.next_player()
-            self.gamestate.print_state()
-            if pause:
-                _ = input("Press any key to proceed to the next turn.")
         print("Player " + str(self.gamestate.winning_player()) + "wins the game!")
 
 
