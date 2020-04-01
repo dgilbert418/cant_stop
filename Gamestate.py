@@ -2,12 +2,12 @@ import random
 import numpy
 import pandas as pd
 
-class Gamestate:
+NUM_DICE = 4
+NUM_LANES = 11
+LANE_LENGTHS = {2: 3, 3: 5, 4: 7, 5: 9, 6: 11, 7: 13, 8: 11, 9: 9, 10: 7, 11: 5, 12: 3}
+NUM_TEMP_CONES = 3
 
-    NUM_DICE = 4
-    NUM_LANES = 11
-    LANE_LENGTHS = {2: 3, 3: 5, 4: 7, 5: 9, 6: 11, 7: 13, 8: 11, 9: 9, 10: 7, 11: 5, 12: 3}
-    NUM_TEMP_CONES = 3
+class Gamestate:
 
     def __init__(self, player_progress, turn_progress, cur_player, dice, turn_number):
         self.player_progress = player_progress  # List length NUM_PLAYERS of dicts length NUM_LANES
@@ -22,19 +22,19 @@ class Gamestate:
         player_progress = []
         for i in range(num_players):
             p = {}
-            for j in cls.LANE_LENGTHS:
+            for j in LANE_LENGTHS:
                 p[j] = 0
             player_progress.append(p)
         turn_progress = {}
         cur_player = start_player
-        dice = [0 for i in range(cls.NUM_DICE)]
+        dice = [0 for i in range(NUM_DICE)]
         turn_number = 0
         board = cls(player_progress, turn_progress, cur_player, dice, turn_number)
         board.roll_dice()
         return board
 
     def roll_dice(self):
-        self.dice = [random.randrange(1, 7) for _ in range(self.NUM_DICE)]
+        self.dice = [random.randrange(1, 7) for _ in range(NUM_DICE)]
 
     def advance_lane(self, lane):
         if lane in self.completed_lanes:
@@ -42,14 +42,14 @@ class Gamestate:
                 "Cannot advance on lane " + str(lane) + "; it is already complete."
             )
         elif lane in self.turn_progress:
-            if self.player_progress[self.cur_player][lane] + self.turn_progress[lane] < self.LANE_LENGTHS[lane]:
+            if self.player_progress[self.cur_player][lane] + self.turn_progress[lane] < LANE_LENGTHS[lane]:
                 self.turn_progress[lane] += 1
             else:
                 raise CannotAdvanceError(
                     "Cannot advance on lane " + str(lane) + "; end of lane."
                 )
         else:
-            if len(self.turn_progress) >= self.NUM_TEMP_CONES:
+            if len(self.turn_progress) >= NUM_TEMP_CONES:
                 raise CannotAdvanceError(
                     "Cannot advance on lane " + str(lane) + "; no more temporary cones."
                 )
@@ -71,7 +71,7 @@ class Gamestate:
             return False
         elif lane not in self.turn_progress:
             return True
-        elif self.player_progress[self.cur_player][lane] + self.turn_progress[lane] >= self.LANE_LENGTHS[lane]:
+        elif self.player_progress[self.cur_player][lane] + self.turn_progress[lane] >= LANE_LENGTHS[lane]:
             return False
         else:
             return True
@@ -91,19 +91,19 @@ class Gamestate:
 
     def find_completed_lanes(self):
         complete = []
-        for i in self.LANE_LENGTHS:
+        for i in LANE_LENGTHS:
             for j in range(len(self.player_progress)):
                 if j == self.cur_player and i in self.turn_progress:
-                    if self.player_progress[j][i] + self.turn_progress[i] == self.LANE_LENGTHS[i]:
+                    if self.player_progress[j][i] + self.turn_progress[i] == LANE_LENGTHS[i]:
                         complete.append(i)
                 else:
-                    if self.player_progress[j][i] == self.LANE_LENGTHS[i]:
+                    if self.player_progress[j][i] == LANE_LENGTHS[i]:
                         complete.append(i)
         return complete
 
     def all_combos(self):
         combos = []
-        for i in range(1, self.NUM_DICE):
+        for i in range(1, NUM_DICE):
             temp = self.dice.copy()
             lane_1 = temp.pop(i) + temp.pop(0)
             lane_2 = sum(temp)
@@ -114,7 +114,7 @@ class Gamestate:
 
     def winning_player(self):
         for player_id, progress in enumerate(self.player_progress):
-            if sum(progress[i] == self.LANE_LENGTHS[i] for i in self.LANE_LENGTHS) >= 3:
+            if sum(progress[i] == LANE_LENGTHS[i] for i in LANE_LENGTHS) >= 3:
                 return player_id
         return None
 
