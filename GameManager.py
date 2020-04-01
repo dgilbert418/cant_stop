@@ -15,18 +15,16 @@ class GameManager:
         player_progress = deepcopy(self.gamestate.player_progress)
         turn_progress = deepcopy(self.gamestate.turn_progress)
 
+        print(combos)
         move, lock_in = self.players[self.gamestate.cur_player].make_move(combos, player_progress, turn_progress)
         print(move)
         return move, lock_in
 
     def execute_game(self, pause=False):
-        while not self.gamestate.winning_player():
+        while self.gamestate.winning_player() is None:
             self.gamestate.roll_dice()
             if len(self.gamestate.all_combos()) > 0:
                 move, lock_in = self.query_player()
-
-                print("Move: " + str(move))
-                print("All_combos: " + str(self.gamestate.all_combos()))
                 if sorted(move) in self.gamestate.all_combos():
                     self.gamestate.advance(move)
                 else:
@@ -40,7 +38,7 @@ class GameManager:
             else:
                 self.gamestate.next_player()
 
-        print("Player " + str(self.gamestate.winning_player()) + "wins the game!")
+        print("Player " + str(self.gamestate.winning_player()) + " wins the game!")
 
 
 class IllegalMoveError(Exception):

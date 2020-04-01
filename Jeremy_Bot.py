@@ -1,4 +1,5 @@
 from Player import Player
+import random
 
 class Jeremy_Bot(Player):
 
@@ -6,4 +7,6 @@ class Jeremy_Bot(Player):
         pass
 
     def make_move(self, combos, player_progress, turn_progress):
-        return combos[0], True
+        choice = random.choice(combos)
+        lock_in = random.choice([True, False])
+        return choice, lock_in
