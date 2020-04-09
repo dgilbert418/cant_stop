@@ -5,7 +5,8 @@ from collections import defaultdict
 
 
 class Jeremy_Bot(Player):
-    def __init__(self):
+    def __init__(self, player_number):
+        self.player_number = player_number
         every_possible_combo = []
         for dice_roll in combinations_with_replacement(range(1, 7), 4):
             every_possible_combo.append(Jeremy_Bot.roll_combos(dice_roll))
@@ -34,6 +35,21 @@ class Jeremy_Bot(Player):
 
     #Choosing random from combos right now.
     def make_move(self, combos, player_progress, turn_progress):
+        combo_points = defaultdict(int)
+        for combo in combos:
+            for col in combo:
+                if col in player_progress[self.player_number]:
+                    combo_points[tuple(combo)] += 1
+        if combo_points:
+            move = max(combo_points, key=combo_points.get)
+        else:
+            move = random.choice(combos)
+        for col in move:
+            if col in turn_progress:
+                turn_progress[col] += 1
+            else:
+                turn_progress[col] = 1
+
         if len(turn_progress) >= 3:
             E = 0
             for col_i in turn_progress:
@@ -43,10 +59,10 @@ class Jeremy_Bot(Player):
                 E += self.probs[(col_i, col_j)]*((turn_progress[col_i] + 1)/self.probs[col_i] + (turn_progress[col_j] + 1)/self.probs[col_j] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
 
             if E < sum(col_i/self.probs[col_i] for col_i in turn_progress):
-                return random.choice(combos), True
+                return move, True
             else:
-                return random.choice(combos), False
+                return move, False
         else:
-            return random.choice(combos), False
+            return move, False
 
 
