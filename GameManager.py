@@ -6,6 +6,8 @@ import random
 
 class GameManager:
     def __init__(self, players):
+        for i, player in enumerate(players):
+            player.player_number = i
         self.players = players
 
     def query_player(self):
