@@ -22,7 +22,6 @@ class JeremyBot(Player):
             for combo_set in every_possible_combo:
                 if combo in combo_set:
                     self.probs[combo] += 1/len(every_possible_combo)
-        print(self.probs)
         super().__init__()
 
     def make_move(self, combos, player_progress, turn_progress):
