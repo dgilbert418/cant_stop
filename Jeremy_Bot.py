@@ -42,7 +42,7 @@ class Jeremy_Bot(Player):
             for col_i, col_j in combinations_with_replacement(turn_progress, 2):
                 E += self.probs[(col_i, col_j)]*((turn_progress[col_i] + 1)/self.probs[col_i] + (turn_progress[col_j] + 1)/self.probs[col_j] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
 
-            if E < sum(col/self.probs[col] for col in turn_progress):
+            if E < sum(col_i/self.probs[col_i] for col_i in turn_progress):
                 return random.choice(combos), True
             else:
                 return random.choice(combos), False
