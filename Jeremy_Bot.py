@@ -35,14 +35,14 @@ class Jeremy_Bot(Player):
     #Choosing random from combos right now.
     def make_move(self, combos, player_progress, turn_progress):
         if len(turn_progress) >= 3:
-            expected_progress = 0
+            E = 0
             for col in turn_progress:
-                expected_progress += self.probs[col]*((turn_progress[col] + 1)/self.probs[col] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
-                expected_progress += self.probs[(col, col)]*((turn_progress[col] + 2)/self.probs[col] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
+                E += self.probs[col]*((turn_progress[col] + 1)/self.probs[col] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
+                E += self.probs[(col, col)]*((turn_progress[col] + 2)/self.probs[col] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
             for col_i, col_j in combinations_with_replacement(turn_progress, 2):
-                expected_progress += self.probs[(col_i, col_j)]*((turn_progress[col_i] + 1)/self.probs[col_i] + (turn_progress[col_j] + 1)/self.probs[col_j] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
+                E += self.probs[(col_i, col_j)]*((turn_progress[col_i] + 1)/self.probs[col_i] + (turn_progress[col_j] + 1)/self.probs[col_j] + sum(turn_progress[col_k]/self.probs[col_k] for col_k in turn_progress))
 
-            if expected_progress < sum(col_k/self.probs[col_k] for col_k in turn_progress):
+            if E < sum(col_k/self.probs[col_k] for col_k in turn_progress):
                 return random.choice(combos), True
             else:
                 return random.choice(combos), False
