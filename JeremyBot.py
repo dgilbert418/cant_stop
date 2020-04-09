@@ -22,7 +22,6 @@ class JeremyBot(Player):
                     self.probs[combo] += 1/len(every_possible_combo)
         super().__init__()
 
-    #Choosing random from combos right now.
     def make_move(self, combos, player_progress, turn_progress):
         combos = [tuple(combo) for combo in combos]
         combo_points = defaultdict(int)
