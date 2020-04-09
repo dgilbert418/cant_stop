@@ -107,9 +107,9 @@ class Gamestate:
             temp = self.dice.copy()
             lane_1 = temp.pop(i) + temp.pop(0)
             lane_2 = sum(temp)
-            valid_lanes = list(filter(self.is_lane_advanceable, [lane_1, lane_2]))
-            if valid_lanes:
-                combos.append(sorted(valid_lanes))
+            valid_lanes = sorted(filter(self.is_lane_advanceable, [lane_1, lane_2]))
+            if valid_lanes and valid_lanes not in combos:
+                combos.append(valid_lanes)
         return combos
 
     def winning_player(self):
