@@ -1,12 +1,15 @@
 from Gamestate import Gamestate
 from Jeremy_Bot import Jeremy_Bot
+from Player import Player
 from GameManager import GameManager
 
-bad_players = [Jeremy_Bot(), Jeremy_Bot(), Jeremy_Bot(), Jeremy_Bot()]
+bad_players = [Jeremy_Bot(), Player()]
 my_game = GameManager(bad_players)
-
-my_game.execute_game()
-
+winners = {0: 0, 1: 0}
+for i in range(10000):
+    winner = my_game.execute_game()
+    winners[winner] += 1
+print(winners)
 
 
 # gamestate = Gamestate.new_board(4, 0)

@@ -13,7 +13,7 @@ class Jeremy_Bot(Player):
         self.probs = defaultdict(int)
         for i in range(2, 13):
             for combo_set in every_possible_combo:
-                if any([i in pair for pair in combo_set]):
+                if any([i in pair and pair != (i, i) for pair in combo_set]):
                     self.probs[i] += 1/len(every_possible_combo)
 
         for combo in combinations_with_replacement(range(2, 13), 2):
