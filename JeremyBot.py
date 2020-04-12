@@ -1,7 +1,7 @@
 from Player import Player
 import random
 import BotLib
-from itertools import combinations_with_replacement, chain, permutations, combinations
+from itertools import combinations_with_replacement, chain
 from collections import defaultdict
 
 
@@ -16,7 +16,6 @@ class JeremyBot(Player):
                     sum_probs[i] += 1/len(every_combo_set)
         self.sum_probs = dict(sum_probs)
         self.every_combo_set = every_combo_set
-        print(list(combinations(range(1, 7), 4)))
         super().__init__()
 
     # def calculate_advance_probs(self, turn_progress):
