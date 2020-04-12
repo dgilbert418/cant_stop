@@ -1,14 +1,13 @@
 from Player import Player
 import random
 import BotLib
-from itertools import combinations_with_replacement, chain
+from itertools import product, chain
 from collections import defaultdict
 
 
 class JeremyBot(Player):
     def __init__(self):
-        every_combo_set = set(JeremyBot.roll_combos(dice_roll)
-                              for dice_roll in combinations_with_replacement(range(1, 7), 4))
+        every_combo_set = [JeremyBot.roll_combos(dice_roll) for dice_roll in product(range(1, 7), repeat=4)]
         sum_probs = defaultdict(float)
         for i in range(2, 13):
             for combo_set in every_combo_set:
