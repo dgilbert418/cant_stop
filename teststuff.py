@@ -5,7 +5,7 @@ from Player import Player
 from GameManager import GameManager
 
 
-bad_players = [DodgerBot(30), DodgerBot(4)]
+bad_players = [JeremyBot(), Player()]
 my_game = GameManager(bad_players)
 winners = {0: 0, 1: 0}
 for i in range(1000):
