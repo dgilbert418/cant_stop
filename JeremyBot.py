@@ -8,7 +8,7 @@ from collections import defaultdict
 class JeremyBot(Player):
     def __init__(self):
         every_combo_set = set(JeremyBot.roll_combos(dice_roll)
-                              for dice_roll in combinations(range(1, 7), 4))
+                              for dice_roll in combinations_with_replacement(range(1, 7), 4))
         sum_probs = defaultdict(float)
         for i in range(2, 13):
             for combo_set in every_combo_set:
