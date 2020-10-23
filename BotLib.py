@@ -1,8 +1,7 @@
 import Gamestate
 from copy import deepcopy
-from itertools import product, chain
+from itertools import product, chain, combinations
 from collections import defaultdict
-
 
 def i_won(move, player_progress, turn_progress, player_number):
     player_progress_temp = deepcopy(player_progress[player_number])
@@ -45,7 +44,7 @@ for j in range(1, 13):
     for c in combos:
         bust_dict[c] = 0
 
-every_combo_set = [BotLib.roll_combos(dice_roll) for dice_roll in product(range(1, 7), repeat=4)]
+every_combo_set = [roll_combos(dice_roll) for dice_roll in product(range(1, 7), repeat=4)]
 for c in every_combo_set:
     for b in bust_dict:
         if len(set(chain(*c)).intersection(set(b))) == 0:

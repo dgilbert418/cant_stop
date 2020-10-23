@@ -4,7 +4,6 @@ import BotLib
 from itertools import product, chain
 from collections import defaultdict
 
-
 class JeremyBot(Player):
     def __init__(self):
         every_combo_set = [JeremyBot.roll_combos(dice_roll) for dice_roll in product(range(1, 7), repeat=4)]
